@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function SurahList({ surah }) {
+export default function SurahList({ surah, navigation }) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity 
+      style={styles.container} 
+      onPress={() => navigation.navigate('SurahDetail', { surahNumber: surah.number, surahName: surah.englishName })}
+    >
       <Text style={styles.surahNumber}>{surah.number}</Text>
       <View style={styles.textContainer}>
         <Text style={styles.surahName}>{surah.englishName}</Text>

@@ -3,7 +3,7 @@ import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import SurahList from '../components/SurahList';
 
-export default function QuranScreen() {
+export default function QuranScreen({ navigation }) { // Tambahkan navigation
   const [surahs, setSurahs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +34,7 @@ export default function QuranScreen() {
     <View style={{ flex: 1 }}>
       <FlatList
         data={surahs}
-        renderItem={({ item }) => <SurahList surah={item} />}
+        renderItem={({ item }) => <SurahList surah={item} navigation={navigation} />}
         keyExtractor={(item) => item.number.toString()}
       />
     </View>

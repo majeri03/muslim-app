@@ -18,21 +18,21 @@ export default function HomeScreen() {
 
         {/* Fitur Menu */}
         <View style={styles.menuContainer}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('QiblaScreen')}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Qibla')}>
             <Ionicons name="compass" size={40} color="white" />
             <Text style={styles.menuText}>Arah Kiblat</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('PrayerTimes')}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Sholat')}>
             <Ionicons name="time" size={40} color="white" />
             <Text style={styles.menuText}>Jadwal Sholat</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('QuranScreen')}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Quran')}>
             <Ionicons name="book" size={40} color="white" />
             <Text style={styles.menuText}>Al-Qur’an</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('DuaScreen')}>
-            <Ionicons name="heart" size={40} color="white" />
-            <Text style={styles.menuText}>Doa Harian</Text>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Hijriah')}>
+            <Ionicons name="calendar" size={40} color="white" />
+            <Text style={styles.menuText}>Kalender Hijriah</Text>
           </TouchableOpacity>
         </View>
 

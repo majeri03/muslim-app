@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as Location from 'expo-location';
 import PrayerTimeCard from '../components/PrayerTimeCard';
@@ -8,6 +8,7 @@ export default function PrayerTimesScreen() {
   const [prayerTimes, setPrayerTimes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [locationName, setLocationName] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -20,6 +21,7 @@ export default function PrayerTimesScreen() {
 
       let location = await Location.getCurrentPositionAsync({});
       fetchPrayerTimes(location.coords.latitude, location.coords.longitude);
+      fetchLocationName(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
@@ -45,16 +47,79 @@ export default function PrayerTimesScreen() {
     }
   };
 
+  const fetchLocationName = async (lat, lng) => {
+    try {
+      let reverseGeocode = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lng });
+      if (reverseGeocode.length > 0) {
+        setLocationName(reverseGeocode[0].city || reverseGeocode[0].region || 'Lokasi tidak ditemukan');
+      }
+    } catch (error) {
+      console.error('Error fetching location name:', error);
+    }
+  };
+
+  const translatePrayerName = (name) => {
+    const names = {
+      Fajr: 'Subuh',
+      Dhuhr: 'Zuhur',
+      Asr: 'Ashar',
+      Maghrib: 'Maghrib',
+      Isha: 'Isya',
+      Sunrise: 'Matahari Terbit',
+      Sunset: 'Matahari Terbenam',
+      Imsak: 'Imsak',
+      Midnight: 'Tengah Malam',
+    };
+    return names[name] || name;
+  };
+
   if (loading) return <ActivityIndicator size="large" color="blue" />;
-  if (error) return <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>;
+  if (error) return <Text style={styles.errorText}>{error}</Text>;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Waktu Sholat</Text>
+        <Text style={styles.subHeaderText}>{locationName}</Text>
+      </View>
+
+      {/* Daftar Waktu Sholat */}
       <FlatList
         data={Object.entries(prayerTimes)}
-        renderItem={({ item }) => <PrayerTimeCard name={item[0]} time={item[1]} />}
+        renderItem={({ item }) => <PrayerTimeCard name={translatePrayerName(item[0])} time={item[1]} />}
         keyExtractor={(item) => item[0]}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 20,
+  },
+  header: {
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  subHeaderText: {
+    fontSize: 16,
+    color: 'white',
+    marginTop: 5,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+});
